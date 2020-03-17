@@ -17,10 +17,20 @@ public class ImageRotate : MonoBehaviour
     
     void Start()
     {
+        loadImage ();
+    }
+
+    private void loadImage ()
+    {
         Sprite originalSprite = Resources.Load<Sprite> ("Smiley");
 
         imageGO.GetComponent<Image>().sprite = originalSprite;  
 
+        createTexture (originalSprite);
+    }
+
+    private void createTexture (Sprite originalSprite)
+    {
         Texture2D texture = new Texture2D( (int)originalSprite.rect.width, (int)originalSprite.rect.height );
 
         Color[] pixels = originalSprite.texture.GetPixels(  (int)originalSprite.rect.x, 
@@ -32,7 +42,7 @@ public class ImageRotate : MonoBehaviour
 
         texture.Apply();
 
-        originalTexture = texture; 
+        originalTexture = texture;
     }
 
     public void OnButtonClick ()
@@ -81,6 +91,7 @@ public class ImageRotate : MonoBehaviour
 
          return textureCopy;
      }
+     
      public Color32[] rotateSquare(Color32[] arr, double radian, Texture2D originTexture)
      {
          int x;
