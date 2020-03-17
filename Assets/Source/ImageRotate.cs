@@ -2,27 +2,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class LoadImage : MonoBehaviour
+public class ImageRotate : MonoBehaviour
 {
-    public static LoadImage Instance;
+    [SerializeField]
+    private GameObject imageGO;
 
+    [SerializeField]
+    private InputField inputField;
 
-    public Texture2D texture2;
+    private Texture2D originalTexture;
  
- 
+    
     void Start()
     {
-        Instance = this;
+        Sprite originalSprite = Resources.Load<Sprite> ("Smiley");
 
-        Texture2D ro = RotateImage (texture2 , 90);
+        imageGO.GetComponent<Image>().sprite = originalSprite;  
 
-        gameObject.GetComponent<SpriteRenderer>().sprite = Sprite.Create (ro , 
-                                                                            gameObject.GetComponent<SpriteRenderer>().sprite.rect , 
-                                                                            new Vector2 (0.5f,0.5f)); 
+        Texture2D texture = new Texture2D( (int)originalSprite.rect.width, (int)originalSprite.rect.height );
+
+        Color[] pixels = originalSprite.texture.GetPixels(  (int)originalSprite.rect.x, 
+                                         (int)originalSprite.rect.y, 
+                                         (int)originalSprite.rect.width, 
+                                         (int)originalSprite.rect.height );
+
+        texture.SetPixels( pixels );
+
+        texture.Apply();
+
+        originalTexture = texture; 
     }
 
-    public Texture2D RotateImage(Texture2D originTexture, int angle)
+    public void OnButtonClick ()
+    {
+        float angle = float.Parse(inputField.text);
+
+        Texture2D newTexture = RotateImage (originalTexture , angle);
+
+        imageGO.GetComponent<Image>().sprite = Sprite.Create (newTexture , imageGO.GetComponent<Image>().sprite.rect , new Vector2 (0.5f,0.5f));
+    }
+
+    public Texture2D RotateImage(Texture2D originTexture, float angle)
     {
          Texture2D textureCopy;
 
